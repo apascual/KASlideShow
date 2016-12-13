@@ -38,9 +38,13 @@ typedef NS_ENUM(NSUInteger, KASlideShowState) {
 @end
 
 @protocol KASlideShowDataSource <NSObject>
+
 @required
-- (NSObject *) slideShow:(KASlideShow *)slideShow objectAtIndex:(NSUInteger)index;
 - (NSUInteger) slideShowImagesNumber:(KASlideShow *)slideShow;
+@optional
+- (void)slideShow:(KASlideShow *)slideShow populateImageView:(UIImageView*) imageView andIndex:(NSUInteger) index;
+- (NSObject *) slideShow:(KASlideShow *)slideShow objectAtIndex:(NSUInteger)index;
+
 @end
 
 @interface KASlideShow : UIView

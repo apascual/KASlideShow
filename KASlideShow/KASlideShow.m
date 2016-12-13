@@ -113,23 +113,27 @@ typedef NS_ENUM(NSInteger, KASlideShowSlideMode) {
     [self reloadData];
 }
 
-- (void) populateImageView:(UIImageView*) imageView andIndex:(NSUInteger) index
-{
-    NSObject * dataObj = [self.datasource slideShow:self objectAtIndex:index];
-    if ([dataObj isKindOfClass:[UIImage class]])
-    {
-        UIImage * image = (UIImage *) dataObj;
-        imageView.image = image;
-    } else if ([dataObj isKindOfClass:[NSString class]])
-    {
-        NSString * imageName = (NSString *) dataObj;
-        imageView.image = [UIImage imageNamed:imageName];
-    } else if ([dataObj isKindOfClass:[NSURL class]])
-    {
-        NSURL * imageURL = (NSURL *) dataObj;
-        [imageView sd_setImageWithURL:imageURL];
-    } else {
-        [NSException raise:@"Invalid type" format:@"KASlideShow only allow UIImage, NSString or NSURL"];
+- (void) populateImageView:(UIImageView*) imageView andIndex:(NSUInteger) index {
+    if([self.datasource respondsToSelector:@selector(slideShow:populateImageView:andIndex:)]) {
+        [self.datasource slideShow:self populateImageView:imageView andIndex:index];
+    }
+    else if([self.datasource respondsToSelector:@selector(slideShow:objectAtIndex:)]) {
+        NSObject * dataObj = [self.datasource slideShow:self objectAtIndex:index];
+        if ([dataObj isKindOfClass:[UIImage class]])
+        {
+            UIImage * image = (UIImage *) dataObj;
+            imageView.image = image;
+        } else if ([dataObj isKindOfClass:[NSString class]])
+        {
+            NSString * imageName = (NSString *) dataObj;
+            imageView.image = [UIImage imageNamed:imageName];
+        } else if ([dataObj isKindOfClass:[NSURL class]])
+        {
+            NSURL * imageURL = (NSURL *) dataObj;
+            [imageView sd_setImageWithURL:imageURL];
+        } else {
+            [NSException raise:@"Invalid type" format:@"KASlideShow only allow UIImage, NSString or NSURL"];
+        }
     }
 }
 
